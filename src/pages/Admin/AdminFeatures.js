@@ -24,7 +24,7 @@ function AdminFeatures() {
   const fetchassessaData = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/api/skillnaav/get-skillnaav-data");
+      const response = await axios.get("/api/assessa/get-assessa-data");
       setassessaData(response.data);
     } catch (error) {
       message.error("Failed to fetch data. Please try again later.");
@@ -44,7 +44,7 @@ function AdminFeatures() {
       formData.append("file", selectedFile);
       formData.append("folder", "features");
 
-      const uploadRes = await axios.post("/api/skillnaav/upload", formData, {
+      const uploadRes = await axios.post("/api/assessa/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -69,7 +69,7 @@ function AdminFeatures() {
       };
 
       const response = await axios.put(
-        `/api/skillnaav/update-feature/${selectedFeature._id}`,
+        `/api/assessa/update-feature/${selectedFeature._id}`,
         payload
       );
 
@@ -100,7 +100,7 @@ function AdminFeatures() {
         featureImg: imgKey ? imgKey : "",
       };
 
-      const response = await axios.post("/api/skillnaav/add-feature", payload);
+      const response = await axios.post("/api/assessa/add-feature", payload);
       if (response.data.success) {
         message.success(response.data.message);
         setShowAddModal(false);
@@ -124,7 +124,7 @@ function AdminFeatures() {
     try {
       setLoading(true);
       const response = await axios.delete(
-        `/api/skillnaav/delete-feature/${featureId}`
+        `/api/assessa/delete-feature/${featureId}`
       );
       if (response.data.success) {
         message.success(response.data.message);

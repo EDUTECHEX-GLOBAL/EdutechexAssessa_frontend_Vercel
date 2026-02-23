@@ -8,7 +8,7 @@ import {
   faCogs, // For Settings
   faSignOutAlt, // For Logout
 } from "@fortawesome/free-solid-svg-icons";
-import logo from "../../../../assets-webapp/Skillnaav-logo.png"; // Replace with your actual logo path
+// import logo from "../../../../assets-webapp/assessa-logo.png"; 
 import { useTabContext } from "./UserHomePageContext/HomePageContext"; // Adjust path as needed
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
@@ -33,7 +33,7 @@ const Sidebar = () => {
     <div className="w-64 h-screen bg-white flex flex-col justify-between pl-6 pr-6 font-poppins shadow-lg sticky top-0 overflow-y-auto scrollbar-hide">
       {/* Logo Section */}
       <div className="sticky top-0 z-10 bg-white py-4 flex items-center justify-center">
-        <img src={logo} alt="Skillnaav Logo" className="h-16 object-contain" />
+        <img src={logo} alt="assessa Logo" className="h-16 object-contain" />
       </div>
 
       {/* Navigation Links */}

@@ -24,10 +24,10 @@ const AdminTeam = () => {
   const fetchassessaData = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/api/skillnaav/get-skillnaav-data");
+      const response = await axios.get("/api/assessa/get-assessa-data");
       setassessaData(response.data.teammember);
     } catch (error) {
-      console.error("Error fetching SkillNaav data:", error);
+      console.error("Error fetching assessa data:", error);
       message.error("Failed to fetch team members");
     } finally {
       setLoading(false);
@@ -45,7 +45,7 @@ const AdminTeam = () => {
 
     setUploading(true);
     try {
-      const uploadRes = await axios.post("/api/skillnaav/upload", formData, {
+      const uploadRes = await axios.post("/api/assessa/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -69,7 +69,7 @@ const AdminTeam = () => {
 
     try {
       const response = await axios.post(
-        "/api/skillnaav/add-teammember",
+        "/api/assessa/add-teammember",
         teamData
       );
       message.success(response.data.message);
@@ -93,7 +93,7 @@ const AdminTeam = () => {
 
     try {
       const response = await axios.put(
-        `/api/skillnaav/update-teammember/${selectedTeamMember._id}`,
+        `/api/assessa/update-teammember/${selectedTeamMember._id}`,
         teamData
       );
       message.success(response.data.message);
@@ -111,7 +111,7 @@ const AdminTeam = () => {
   // Delete team member
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/skillnaav/delete-teammember/${id}`);
+      await axios.delete(`/api/assessa/delete-teammember/${id}`);
       message.success("Team member deleted successfully");
       fetchassessaData();
     } catch (error) {

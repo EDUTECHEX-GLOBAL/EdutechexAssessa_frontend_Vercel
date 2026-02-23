@@ -54,7 +54,7 @@ const AdminDiscover = () => {
       };
 
       const id = assessaData.discover[0]._id;
-      const response = await axios.put(`/api/skillnaav/update-discover/${id}`, payload);
+      const response = await axios.put(`/api/assessa/update-discover/${id}`, payload);
       dispatch(HideLoading());
       if (response.data.success) {
         message.success("Changes saved successfully");
@@ -76,7 +76,7 @@ const AdminDiscover = () => {
       const formData = new FormData();
       formData.append("file", selectedFile);
       formData.append("folder", "discover");
-      const res = await axios.post("/api/skillnaav/upload", formData, {
+      const res = await axios.post("/api/assessa/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       const { key, url } = res.data;
@@ -107,7 +107,7 @@ const AdminDiscover = () => {
       formData.append("folder", "company");
 
       // upload to s3
-      const uploadRes = await axios.post("/api/skillnaav/upload", formData, {
+      const uploadRes = await axios.post("/api/assessa/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -115,7 +115,7 @@ const AdminDiscover = () => {
 
       // create a DiscoverCompImg doc in DB (your existing route)
       // we send the S3 key to DB so it stores the key; the GET route will return signed URL for display
-      const addRes = await axios.post("/api/skillnaav/add-discover-comp-img", {
+      const addRes = await axios.post("/api/assessa/add-discover-comp-img", {
         imageUrl: key,
       });
 
@@ -146,7 +146,7 @@ const AdminDiscover = () => {
       if (!id) {
         // fallback: previous code deleted by URL as id param; try that
         const resp = await axios.delete(
-          `/api/skillnaav/delete-discover-comp-img/${encodeURIComponent(urlToRemove)}`
+          `/api/assessa/delete-discover-comp-img/${encodeURIComponent(urlToRemove)}`
         );
         if (resp.data.success) {
           message.success("Company image deleted successfully");
@@ -159,7 +159,7 @@ const AdminDiscover = () => {
       }
 
       // delete by id
-      const response = await axios.delete(`/api/skillnaav/delete-discover-comp-img/${id}`);
+      const response = await axios.delete(`/api/assessa/delete-discover-comp-img/${id}`);
       if (response.data.success) {
         message.success("Company image deleted successfully");
         setCompImageUrls((prev) => prev.filter((u) => u !== urlToRemove));

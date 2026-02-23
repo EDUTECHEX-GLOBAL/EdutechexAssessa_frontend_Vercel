@@ -78,15 +78,18 @@ function App() {
   const dispatch = useDispatch();
 
   const getassessaData = async () => {
-    try {
-      const response = await axios.get("/api/skillnaav/get-skillnaav-data");
-      dispatch(SetassessaData(response.data));
-      dispatch(HideLoading());
-    } catch (error) {
-      console.error("Error fetching SkillNaav data:", error);
-      dispatch(HideLoading());
-    }
-  };
+  try {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/api/assessa/get-assessa-data`
+    );
+
+    dispatch(SetassessaData(response.data));
+    dispatch(HideLoading());
+  } catch (error) {
+    console.error("Error fetching Assessa data:", error);
+    dispatch(HideLoading());
+  }
+};
 
   useEffect(() => {
     if (!assessaData || reloadData) {

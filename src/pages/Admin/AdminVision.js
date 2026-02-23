@@ -42,7 +42,7 @@ const AdminVision = () => {
       formData.append("file", selectedFile);
       formData.append("folder", "vision"); // store in S3/vision
 
-      const res = await axios.post("/api/skillnaav/upload", formData, {
+      const res = await axios.post("/api/assessa/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -63,7 +63,7 @@ const AdminVision = () => {
   // ✅ Fetch data from backend
   const fetchassessaData = useCallback(async () => {
     try {
-      const response = await axios.get("/api/skillnaav/get-skillnaav-data");
+      const response = await axios.get("/api/assessa/get-assessa-data");
       setassessaData(response.data);
 
       if (response.data.visionhead && response.data.visionhead.length > 0) {
@@ -71,7 +71,7 @@ const AdminVision = () => {
         setPreviewUrl(response.data.visionhead[0].visionImg || "");
       }
     } catch (error) {
-      console.error("Error fetching skillnaav data:", error);
+      console.error("Error fetching assessa data:", error);
     }
   }, []);
 
@@ -83,7 +83,7 @@ const AdminVision = () => {
         if (modalData.type === "editHead") {
           const { _id } = modalData.data;
           response = await axios.put(
-            `/api/skillnaav/update-visionhead/${_id}`,
+            `/api/assessa/update-visionhead/${_id}`,
             {
               ...values,
               visionImg: imgUrl, // save S3 key, not URL
@@ -93,11 +93,11 @@ const AdminVision = () => {
           const { _id } = modalData.data;
           values._id = _id;
           response = await axios.put(
-            `/api/skillnaav/update-visionpoint/${_id}`,
+            `/api/assessa/update-visionpoint/${_id}`,
             values
           );
         } else if (modalData.type === "addPoint") {
-          response = await axios.post("/api/skillnaav/add-visionpoint", values);
+          response = await axios.post("/api/assessa/add-visionpoint", values);
         }
 
         if (response.data.success) {
@@ -120,7 +120,7 @@ const AdminVision = () => {
     async (visionpointId) => {
       try {
         const response = await axios.delete(
-          `/api/skillnaav/delete-visionpoint/${visionpointId}`
+          `/api/assessa/delete-visionpoint/${visionpointId}`
         );
         if (response.data.success) {
           message.success(response.data.message);
