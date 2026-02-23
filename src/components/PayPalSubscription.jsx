@@ -110,7 +110,7 @@ const PayPalSubscription = ({ planId, planName, price, onSuccess, onError, onCan
               }
               
               const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
-              const response = await fetch("/api/subscription/create-paypal-subscription", {
+              const response = await fetch(`${process.env.REACT_APP_API_URL}/api/subscription/create-paypal-subscription`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -148,7 +148,7 @@ const PayPalSubscription = ({ planId, planName, price, onSuccess, onError, onCan
               toast.info("Activating your subscription...", { autoClose: false });
               
               const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
-              const response = await fetch("/api/subscription/capture-paypal-subscription", {
+              const response = await fetch(`${process.env.REACT_APP_API_URL}/api/subscription/capture-paypal-subscription`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",

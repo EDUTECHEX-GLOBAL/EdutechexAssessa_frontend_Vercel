@@ -12,7 +12,7 @@ const SubscriptionBadge = () => {
   const fetchSubscriptionStatus = async () => {
     try {
       const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
-      const res = await fetch("/api/subscription/my-subscription", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/subscription/my-subscription`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       

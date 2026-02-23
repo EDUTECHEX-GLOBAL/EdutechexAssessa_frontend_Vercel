@@ -90,8 +90,8 @@ export default function AssessmentsPage({ onBackHome }) {
       }
       
       const endpoint = isSAT
-        ? `/api/sat-assessments/${currentAssessment._id}/submit`
-        : `/api/assessments/${currentAssessment._id}/submit`;
+        ? `${process.env.REACT_APP_API_URL}/api/sat-assessments/${currentAssessment._id}/submit`
+        : `${process.env.REACT_APP_API_URL}/api/assessments/${currentAssessment._id}/submit`;
       
       console.log('Auto-submitting assessment with payload:', payload);
       
@@ -117,13 +117,13 @@ export default function AssessmentsPage({ onBackHome }) {
         
         // Refresh assessments list
         if (isSAT) {
-          const updatedSatRes = await fetch("/api/sat-assessments/all", {
+          const updatedSatRes = await fetch(`${process.env.REACT_APP_API_URL}/api/sat-assessments/all`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const updatedSatData = await updatedSatRes.json();
           setSatAssessments(updatedSatData);
         } else {
-          const updatedStandardRes = await fetch("/api/assessments/all", {
+          const updatedStandardRes = await fetch(`${process.env.REACT_APP_API_URL}/api/assessments/all`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const updatedStandardData = await updatedStandardRes.json();
@@ -173,7 +173,7 @@ export default function AssessmentsPage({ onBackHome }) {
     const fetchSubscriptionStatus = async () => {
       try {
         const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
-        const res = await fetch("/api/subscription/my-subscription", {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/subscription/my-subscription`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -220,7 +220,7 @@ useEffect(() => {
         return;
       }
       
-      const standardRes = await fetch("/api/assessments/all", {
+      const standardRes = await fetch(`${process.env.REACT_APP_API_URL}/api/assessments/all`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const standardData = await standardRes.json();
@@ -230,7 +230,7 @@ useEffect(() => {
         toast.error("Failed to load standard assessments");
       }
       
-      const satRes = await fetch("/api/sat-assessments/all", {
+      const satRes = await fetch(`${process.env.REACT_APP_API_URL}/api/sat-assessments/all`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const satData = await satRes.json();
@@ -311,7 +311,7 @@ const handleModeSelected = async (mode) => {
     const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
     
     // Get fresh subscription data from API
-    const subscriptionRes = await fetch("/api/subscription/my-subscription", {
+    const subscriptionRes = await fetch(`${process.env.REACT_APP_API_URL}/api/subscription/my-subscription`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     
@@ -337,7 +337,7 @@ const handleModeSelected = async (mode) => {
       await trackAssessmentAttempt();
       
       // Update usage state after tracking
-      const updatedRes = await fetch("/api/subscription/my-subscription", {
+      const updatedRes = await fetch(`${process.env.REACT_APP_API_URL}/api/subscription/my-subscription`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (updatedRes.ok) {
@@ -366,7 +366,7 @@ const handleModeSelected = async (mode) => {
   const trackAssessmentAttempt = async () => {
     try {
       const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
-      await fetch("/api/subscription/track-attempt", {
+      await fetch(`${process.env.REACT_APP_API_URL}/api/subscription/track-attempt`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -382,7 +382,7 @@ const handleModeSelected = async (mode) => {
   const handleAttemptAssessment = async (assessmentId) => {
     try {
       const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
-      const res = await fetch(`/api/assessments/${assessmentId}/attempt`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/assessments/${assessmentId}/attempt`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -523,8 +523,8 @@ const handleModeSelected = async (mode) => {
       }
       
       const endpoint = isSAT
-        ? `/api/sat-assessments/${currentAssessment._id}/submit`
-        : `/api/assessments/${currentAssessment._id}/submit`;
+        ? `${process.env.REACT_APP_API_URL}/api/sat-assessments/${currentAssessment._id}/submit`
+        : `${process.env.REACT_APP_API_URL}/api/assessments/${currentAssessment._id}/submit`;
       
       const res = await fetch(endpoint, {
         method: "POST",
@@ -546,13 +546,13 @@ const handleModeSelected = async (mode) => {
         }
         
         if (isSAT) {
-          const updatedSatRes = await fetch("/api/sat-assessments/all", {
+          const updatedSatRes = await fetch(`${process.env.REACT_APP_API_URL}/api/sat-assessments/all`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const updatedSatData = await updatedSatRes.json();
           setSatAssessments(updatedSatData);
         } else {
-          const updatedStandardRes = await fetch("/api/assessments/all", {
+          const updatedStandardRes = await fetch(`${process.env.REACT_APP_API_URL}/api/assessments/all`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const updatedStandardData = await updatedStandardRes.json();
@@ -627,8 +627,8 @@ const forceSubmitAssessment = async () => {
     }
     
     const endpoint = isSAT
-      ? `/api/sat-assessments/${currentAssessment._id}/submit`
-      : `/api/assessments/${currentAssessment._id}/submit`;
+      ? `${process.env.REACT_APP_API_URL}/api/sat-assessments/${currentAssessment._id}/submit`
+      : `${process.env.REACT_APP_API_URL}/api/assessments/${currentAssessment._id}/submit`;
     
     console.log('Force submitting assessment with payload:', payload);
     
@@ -654,13 +654,13 @@ const forceSubmitAssessment = async () => {
       
       // Refresh assessments list
       if (isSAT) {
-        const updatedSatRes = await fetch("/api/sat-assessments/all", {
+        const updatedSatRes = await fetch(`${process.env.REACT_APP_API_URL}/api/sat-assessments/all`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const updatedSatData = await updatedSatRes.json();
         setSatAssessments(updatedSatData);
       } else {
-        const updatedStandardRes = await fetch("/api/assessments/all", {
+        const updatedStandardRes = await fetch(`${process.env.REACT_APP_API_URL}/api/assessments/all`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const updatedStandardData = await updatedStandardRes.json();

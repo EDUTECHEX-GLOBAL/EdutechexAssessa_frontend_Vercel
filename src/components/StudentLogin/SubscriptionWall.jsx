@@ -29,7 +29,7 @@ const SubscriptionWall = ({ onUpgrade, onCancel, attemptsUsed }) => {
   const fetchSubscriptionPlans = async () => {
     try {
       const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
-      const res = await fetch("/api/subscription/plans", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/subscription/plans`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
