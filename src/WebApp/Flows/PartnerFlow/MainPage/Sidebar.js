@@ -81,14 +81,6 @@ const Sidebar = () => {
 
   return (
     <div className="w-64 h-screen bg-white flex flex-col justify-between pl-6 pr-6 font-poppins shadow-lg sticky top-0 overflow-y-auto scrollbar-hide">
-      {/* Logo Section */}
-      <div className="sticky top-0 z-10 bg-white py-4 flex items-center justify-center">
-        <img
-          src={logo}
-          alt="assessa Logo"
-          className="h-16 object-contain" // Adjust height and ensure the image maintains aspect ratio
-        />
-      </div>
 
       {/* Navigation Links */}
       <nav className="flex-1">
