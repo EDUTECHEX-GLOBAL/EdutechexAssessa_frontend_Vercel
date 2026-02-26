@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// IMPORTANT: Always append /api/ai-agent to the base URL
+// IMPORTANT: Always append /api/ai-agent to the base url
 const baseURL = process.env.REACT_APP_API_URL 
   ? `${process.env.REACT_APP_API_URL}/api/ai-agent`
   : "https://edutechexassessa-backend-render.onrender.com/api/ai-agent";
