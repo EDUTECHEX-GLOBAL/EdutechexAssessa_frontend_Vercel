@@ -1,4 +1,4 @@
-// Make sure your aiAgentAPI.js uses the environment variable
+// Make sure your aiAgentAPI.js uses the environment variables
 import axios from "axios";
 
 const aiAgentAPI = axios.create({
