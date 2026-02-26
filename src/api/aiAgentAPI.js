@@ -1,8 +1,18 @@
-// Make sure your aiAgentAPI.js uses the environment variables
 import axios from "axios";
 
+// IMPORTANT: Always append /api/ai-agent to the base URL
+const baseURL = process.env.REACT_APP_API_URL 
+  ? `${process.env.REACT_APP_API_URL}/api/ai-agent`
+  : "https://edutechexassessa-backend-render.onrender.com/api/ai-agent";
+
 const aiAgentAPI = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "https://edutechexassessa-backend-render.onrender.com/api/ai-agent",
+  baseURL: baseURL,
+});
+
+// Add request interceptor to verify the full URL being called
+aiAgentAPI.interceptors.request.use(request => {
+  console.log('Final URL:', request.baseURL + request.url);
+  return request;
 });
 
 export default aiAgentAPI;
