@@ -23,11 +23,22 @@ const SignupForm = ({ onSwitch }) => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const { confirmPassword, ...formData } = values; // remove confirmPassword
-      const { data } = await axios.post("/api/users/register", formData);
+      const { confirmPassword, ...formData } = values;
+
+      // ✅ FIXED: Same pattern as LoginForm
+      const config = {
+        headers: { "Content-Type": "application/json" },
+      };
+
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/users/register`,
+        formData,
+        config
+      );
+
       console.log("Signup Successful:", data);
       alert("Signup successful! Please wait for admin approval.");
-      onSwitch(); // Switch to login
+      onSwitch();
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Signup failed. Try again.");
     }
@@ -47,8 +58,8 @@ const SignupForm = ({ onSwitch }) => {
           email: "",
           password: "",
           confirmPassword: "",
-          role: "student", // ✅ Add this!
-          pic: "",         // ✅ Add this too (optional profile pic)
+          role: "student",
+          pic: "",
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
@@ -127,10 +138,7 @@ const SignupForm = ({ onSwitch }) => {
               <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-sm" />
             </div>
 
-            {/* Hidden Role Field (student) */}
             <Field type="hidden" name="role" />
-
-            {/* Optional Profile Pic */}
             <Field type="hidden" name="pic" value="https://example.com/default-pic.png" />
 
             <button
