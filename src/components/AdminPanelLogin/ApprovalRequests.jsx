@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { FaUserCheck, FaUserTimes, FaEnvelope, FaClock, FaSchool } from "react-icons/fa";
 import { toast } from "react-toastify";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 function ApprovalRequests() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +21,7 @@ function ApprovalRequests() {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch(`/api/admin/approvals?status=${filter}`, {
+        const response = await fetch(`${API_URL}/api/admin/approvals?status=${filter}`, {
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("token")}`,
           },
@@ -43,7 +45,7 @@ function ApprovalRequests() {
 
   const handleApprove = async (requestId, role) => {
     try {
-      const response = await fetch(`/api/admin/approvals/${requestId}/approve`, {
+      const response = await fetch(`${API_URL}/api/admin/approvals/${requestId}/approve`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -72,9 +74,7 @@ function ApprovalRequests() {
 
   const confirmRejection = async () => {
     try {
-      const response = await fetch(
-        `/api/admin/approvals/${currentRequest._id}/reject`,
-        {
+      const response = await fetch(`${API_URL}/api/admin/approvals/${currentRequest._id}/reject`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

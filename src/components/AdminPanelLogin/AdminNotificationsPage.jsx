@@ -5,6 +5,8 @@ import {
   FaSearch, FaUserPlus, FaFileUpload, FaClipboardCheck, FaRegClock, FaEye
 } from 'react-icons/fa';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function AdminNotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -27,7 +29,7 @@ export default function AdminNotificationsPage() {
 
     try {
       setLoading(true);
-      const res = await fetch(`/api/admin/notifications`, {
+      const res = await fetch(`${API_URL}/api/admin/notifications`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -57,7 +59,7 @@ export default function AdminNotificationsPage() {
     }
     
     try {
-      const res = await fetch(`/api/admin/notifications/${id}/read`, {
+      const res = await fetch(`${API_URL}/api/admin/notifications/${id}/read`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${getToken()}` },
       });
@@ -81,7 +83,7 @@ export default function AdminNotificationsPage() {
     }
     
     try {
-      const res = await fetch(`/api/admin/notifications/mark-all-read`, {
+      const res = await fetch(`${API_URL}/api/admin/notifications/mark-all-read`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${getToken()}` },
       });
@@ -103,7 +105,7 @@ export default function AdminNotificationsPage() {
     }
     
     try {
-      const res = await fetch(`/api/admin/notifications/${id}`, {
+      const res = await fetch(`${API_URL}/api/admin/notifications/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${getToken()}` },
       });
