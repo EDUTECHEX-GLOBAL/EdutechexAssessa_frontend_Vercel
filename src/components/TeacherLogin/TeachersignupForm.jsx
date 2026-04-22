@@ -4,6 +4,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const TeacherSignupForm = ({ onSwitch }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -23,7 +25,7 @@ const TeacherSignupForm = ({ onSwitch }) => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const { data } = await axios.post("/api/teachers/register", values);
+      const { data } = await axios.post(`${API_URL}/api/teachers/register`, values);
       console.log("Signup Successful:", data);
       alert("Signup successful! Please log in.");
       onSwitch(); // Redirect to Login Form
