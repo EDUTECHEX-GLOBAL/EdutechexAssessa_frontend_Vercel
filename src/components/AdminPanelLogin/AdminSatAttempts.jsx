@@ -12,6 +12,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -38,37 +40,55 @@ const AdminSatAttempts = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchAttempts = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("/api/attempts/sat", {
-          headers: { Authorization: `Bearer ${token}` },
+  const fetchAttempts = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(`${API_URL}/api/attempts/sat`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // ✅ Normalize response
+      const responseData = Array.isArray(res.data)
+        ? res.data
+        : res.data?.data || res.data?.attempts || [];
+
+      setData(responseData);
+
+      if (responseData.length > 0) {
+        const totalAttempts = responseData.length;
+
+        const avgScore =
+          responseData.reduce(
+            (sum, item) => sum + (item.percentage || 0),
+            0
+          ) / totalAttempts;
+
+        const completed = responseData.filter(
+          (item) => item.status === "completed"
+        ).length;
+
+        const highScores = responseData.filter(
+          (item) => item.percentage >= 80
+        ).length;
+
+        setStats({
+          totalAttempts,
+          avgScore,
+          completionRate: (completed / totalAttempts) * 100,
+          highScores,
         });
-        setData(res.data);
-        
-        // Calculate some basic statistics
-        if (res.data.length > 0) {
-          const totalAttempts = res.data.length;
-          const avgScore = res.data.reduce((sum, item) => sum + (item.percentage || 0), 0) / totalAttempts;
-          const completed = res.data.filter(item => item.status === 'completed').length;
-          const highScores = res.data.filter(item => item.percentage >= 80).length;
-          
-          setStats({
-            totalAttempts,
-            avgScore,
-            completionRate: (completed / totalAttempts) * 100,
-            highScores
-          });
-        }
-      } catch (err) {
-        setError("Failed to fetch SAT attempts");
-        console.error("SAT attempts fetch error:", err);
-      } finally {
-        setLoading(false);
       }
-    };
-    fetchAttempts();
-  }, []);
+    } catch (err) {
+      setError("Failed to fetch SAT attempts");
+      console.error("SAT attempts fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchAttempts();
+}, []);
 
   const handleRowClick = async (record) => {
     const studentId = record.studentId;
@@ -87,9 +107,12 @@ const AdminSatAttempts = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`/api/attempts/student/${studentId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        `${API_URL}/api/attempts/student/${studentId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setProfileData(res.data);
     } catch (err) {
       console.error("Failed to fetch student profile", err);
@@ -586,7 +609,11 @@ const AdminSatAttempts = () => {
                 Attempts History
               </Title>
               <div className="max-h-72 overflow-auto pr-2">
-                {profileData.attempts.map((a) => (
+                {(
+                    Array.isArray(profileData?.attempts)
+                      ? profileData.attempts
+                      : profileData?.data?.attempts || []
+                  ).map((a) => (
                   <Card 
                     key={a.id} 
                     className="rounded-lg mb-2 shadow-sm border border-gray-200"

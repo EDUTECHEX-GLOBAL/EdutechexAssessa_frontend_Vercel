@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function StudentManagement() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -8,7 +10,6 @@ export default function StudentManagement() {
   const [studentsPerPage] = useState(8);
   const navigate = useNavigate();
 
-  // ✅ ADD THIS: Function to get token
   const getToken = () => {
     return localStorage.getItem('token');
   };
@@ -16,21 +17,20 @@ export default function StudentManagement() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const token = getToken(); // ✅ GET TOKEN
-        const res = await fetch("/api/admin/students", {
+        const token = getToken();
+        const res = await fetch(`${API_URL}/api/admin/students`, {
           headers: {
-            'Authorization': `Bearer ${token}`, // ✅ ADD AUTHORIZATION HEADER
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
-        
-        // ✅ ADD UNAUTHORIZED HANDLING
+
         if (res.status === 401) {
           localStorage.removeItem('token');
           navigate('/admin-login');
           return;
         }
-        
+
         const data = await res.json();
         setStudents(Array.isArray(data) ? data : []);
       } catch (error) {
@@ -46,16 +46,15 @@ export default function StudentManagement() {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this student?")) return;
     try {
-      const token = getToken(); // ✅ GET TOKEN
-      await fetch(`/api/admin/${id}`, {
+      const token = getToken();
+      await fetch(`${API_URL}/api/admin/${id}`, {
         method: "DELETE",
-        headers: { 
-          'Authorization': `Bearer ${token}`, // ✅ ADD AUTHORIZATION HEADER
-          "Content-Type": "application/json" 
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ role: "student" }),
       });
-
       setStudents((prev) => prev.filter((s) => s._id !== id));
     } catch (err) {
       console.error("Error deleting student:", err);
@@ -64,16 +63,15 @@ export default function StudentManagement() {
 
   const handleToggleAccess = async (id, action) => {
     try {
-      const token = getToken(); // ✅ GET TOKEN
-      await fetch(`/api/admin/${id}/toggle`, {
+      const token = getToken();
+      await fetch(`${API_URL}/api/admin/${id}/toggle`, {
         method: "PATCH",
-        headers: { 
-          'Authorization': `Bearer ${token}`, // ✅ ADD AUTHORIZATION HEADER
-          "Content-Type": "application/json" 
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ role: "student", action }),
       });
-
       setStudents((prev) =>
         prev.map((s) =>
           s._id === id
@@ -86,7 +84,6 @@ export default function StudentManagement() {
     }
   };
 
-  // Get current students for pagination
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
   const currentStudents = students.slice(indexOfFirstStudent, indexOfLastStudent);
@@ -106,7 +103,7 @@ export default function StudentManagement() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header Section - Updated to match Teacher Management */}
+        {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
@@ -125,9 +122,8 @@ export default function StudentManagement() {
           </button>
         </div>
 
-        {/* Statistics Cards with Different Colors */}
+        {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Total Students Card */}
           <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-5 shadow-lg border border-purple-200 transition-all hover:shadow-xl">
             <div className="flex justify-between items-center">
               <div>
@@ -144,8 +140,7 @@ export default function StudentManagement() {
               <span>All registered students</span>
             </div>
           </div>
-          
-          {/* Active Students Card */}
+
           <div className="bg-gradient-to-r from-teal-50 to-teal-100 rounded-xl p-5 shadow-lg border border-teal-200 transition-all hover:shadow-xl">
             <div className="flex justify-between items-center">
               <div>
@@ -164,8 +159,7 @@ export default function StudentManagement() {
               <span>Currently enrolled</span>
             </div>
           </div>
-          
-          {/* Inactive Students Card */}
+
           <div className="bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl p-5 shadow-lg border border-amber-200 transition-all hover:shadow-xl">
             <div className="flex justify-between items-center">
               <div>
@@ -192,7 +186,7 @@ export default function StudentManagement() {
             <h2 className="text-xl font-semibold text-purple-800">Students List</h2>
             <p className="text-sm text-purple-600 mt-1">All registered students in the system</p>
           </div>
-          
+
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-purple-50">
@@ -211,14 +205,12 @@ export default function StudentManagement() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">
                         {(currentPage - 1) * studentsPerPage + (index + 1)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {s.name}
-                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{s.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{s.email}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                          s.status === "approved" 
-                            ? "bg-teal-100 text-teal-800" 
+                          s.status === "approved"
+                            ? "bg-teal-100 text-teal-800"
                             : "bg-amber-100 text-amber-800"
                         }`}>
                           {s.status === "approved" ? "Active" : "Inactive"}
@@ -231,7 +223,6 @@ export default function StudentManagement() {
                         >
                           Delete
                         </button>
-
                         {s.status === "approved" ? (
                           <button
                             className="px-3 py-1.5 bg-amber-100 text-amber-700 rounded-md text-sm hover:bg-amber-200 border border-amber-200 transition-colors duration-200"
@@ -267,14 +258,11 @@ export default function StudentManagement() {
             </table>
           </div>
 
-          {/* Pagination */}
           {students.length > studentsPerPage && (
             <div className="px-6 py-4 bg-purple-50/30 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
               <div className="text-sm text-purple-700">
                 Showing <span className="font-medium">{(currentPage - 1) * studentsPerPage + 1}</span> to{" "}
-                <span className="font-medium">
-                  {Math.min(currentPage * studentsPerPage, students.length)}
-                </span>{" "}
+                <span className="font-medium">{Math.min(currentPage * studentsPerPage, students.length)}</span>{" "}
                 of <span className="font-medium">{students.length}</span> results
               </div>
               <div className="flex space-x-2">
