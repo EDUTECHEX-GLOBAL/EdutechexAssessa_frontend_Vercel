@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { FaBell, FaTimes, FaCheckDouble, FaTrash } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function AdminNotificationBell() {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -11,19 +13,14 @@ export default function AdminNotificationBell() {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  // ✅ FIXED: Consistent token retrieval
   const getToken = () => {
-    // Your AdminLogin stores as "token", so use that consistently
     return localStorage.getItem('token');
   };
 
-  // ✅ FIXED: Check if admin is authenticated
   const isAdminAuthenticated = () => {
     const token = getToken();
     if (!token) return false;
-
     try {
-      // Simple JWT structure check
       const parts = token.split('.');
       return parts.length === 3;
     } catch (error) {
@@ -31,9 +28,7 @@ export default function AdminNotificationBell() {
     }
   };
 
-  // ✅ FIXED: Fetch notifications with consistent token
   const fetchNotifications = async () => {
-    // Don't fetch if not authenticated
     if (!isAdminAuthenticated()) {
       console.log('🔐 Not authenticated as admin, skipping notification fetch');
       setAuthError(true);
@@ -44,32 +39,32 @@ export default function AdminNotificationBell() {
       setLoading(true);
       setAuthError(false);
       const token = getToken();
-      
+
       console.log('🔐 Fetching notifications with token:', token ? token.substring(0, 20) + '...' : 'No token');
 
-      const response = await fetch('/api/admin/notifications?limit=6', {
+      const response = await fetch(`${API_URL}/api/admin/notifications?limit=6`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
-      
+
       console.log('🔐 Response status:', response.status);
-      
+
       if (response.status === 401) {
         setAuthError(true);
         throw new Error('Authentication failed');
       }
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error('❌ API Error:', errorText);
         throw new Error(`Failed to fetch notifications: ${response.status}`);
       }
-      
+
       const data = await response.json();
       console.log('🔐 Notifications data:', data);
-      
+
       if (data.success) {
         setNotifications(data.notifications || []);
         setUnreadCount(data.unreadCount || 0);
@@ -80,7 +75,7 @@ export default function AdminNotificationBell() {
       console.error('❌ Error fetching notifications:', error);
       setNotifications([]);
       setUnreadCount(0);
-      
+
       if (error.message.includes('401') || error.message.includes('Authentication')) {
         setAuthError(true);
         console.log('🔐 Auth failed in notification fetch');
@@ -90,7 +85,6 @@ export default function AdminNotificationBell() {
     }
   };
 
-  // ✅ FIXED: Fetch unread count with consistent token
   const fetchUnreadCount = async () => {
     if (!isAdminAuthenticated()) {
       console.log('🔐 Not authenticated, skipping unread count fetch');
@@ -99,17 +93,17 @@ export default function AdminNotificationBell() {
 
     try {
       const token = getToken();
-      const response = await fetch('/api/admin/notifications/unread-count', {
+      const response = await fetch(`${API_URL}/api/admin/notifications/unread-count`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
-      
+
       if (response.status === 401) {
         setAuthError(true);
         return;
       }
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
@@ -125,16 +119,14 @@ export default function AdminNotificationBell() {
     }
   };
 
-  // ✅ FIXED: Mark as read with consistent token - EVENT PARAMETER MADE OPTIONAL
   const markAsRead = async (notificationId, event) => {
-    // ✅ Handle optional event parameter
     if (event && typeof event.preventDefault === 'function') {
       event.preventDefault();
     }
     if (event && typeof event.stopPropagation === 'function') {
       event.stopPropagation();
     }
-    
+
     if (!isAdminAuthenticated()) {
       console.log('🔐 Not authenticated, cannot mark as read');
       return;
@@ -142,15 +134,14 @@ export default function AdminNotificationBell() {
 
     try {
       const token = getToken();
-      const response = await fetch(`/api/admin/notifications/${notificationId}/read`, {
+      const response = await fetch(`${API_URL}/api/admin/notifications/${notificationId}/read`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
-      
+
       if (response.ok) {
-        // Update local state
         setNotifications(prev =>
           prev.map(notif =>
             notif._id === notificationId ? { ...notif, isRead: true } : notif
@@ -163,16 +154,14 @@ export default function AdminNotificationBell() {
     }
   };
 
-  // ✅ FIXED: Mark all as read with consistent token - EVENT PARAMETER MADE OPTIONAL
   const markAllAsRead = async (event) => {
-    // ✅ Handle optional event parameter
     if (event && typeof event.preventDefault === 'function') {
       event.preventDefault();
     }
     if (event && typeof event.stopPropagation === 'function') {
       event.stopPropagation();
     }
-    
+
     if (!isAdminAuthenticated()) {
       console.log('🔐 Not authenticated, cannot mark all as read');
       return;
@@ -180,13 +169,13 @@ export default function AdminNotificationBell() {
 
     try {
       const token = getToken();
-      const response = await fetch('/api/admin/notifications/mark-all-read', {
+      const response = await fetch(`${API_URL}/api/admin/notifications/mark-all-read`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
@@ -201,16 +190,14 @@ export default function AdminNotificationBell() {
     }
   };
 
-  // ✅ FIXED: Delete notification with consistent token - EVENT PARAMETER MADE OPTIONAL
   const deleteNotification = async (notificationId, event) => {
-    // ✅ Handle optional event parameter
     if (event && typeof event.preventDefault === 'function') {
       event.preventDefault();
     }
     if (event && typeof event.stopPropagation === 'function') {
       event.stopPropagation();
     }
-    
+
     if (!isAdminAuthenticated()) {
       console.log('🔐 Not authenticated, cannot delete notification');
       return;
@@ -218,13 +205,13 @@ export default function AdminNotificationBell() {
 
     try {
       const token = getToken();
-      const response = await fetch(`/api/admin/notifications/${notificationId}`, {
+      const response = await fetch(`${API_URL}/api/admin/notifications/${notificationId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
@@ -237,7 +224,6 @@ export default function AdminNotificationBell() {
     }
   };
 
-  // Get notification link based on type
   const getNotificationLink = (notification) => {
     switch (notification.type) {
       case 'login_request':
@@ -260,7 +246,6 @@ export default function AdminNotificationBell() {
     }
   };
 
-  // Get notification icon and color
   const getNotificationConfig = (type) => {
     const config = {
       login_request: { icon: '👤', color: 'text-blue-500', bgColor: 'bg-blue-100' },
@@ -270,48 +255,40 @@ export default function AdminNotificationBell() {
       approval_rejected: { icon: '👎', color: 'text-red-500', bgColor: 'bg-red-100' },
       system_alert: { icon: '⚠️', color: 'text-orange-500', bgColor: 'bg-orange-100' },
     };
-    
     return config[type] || { icon: '🔔', color: 'text-gray-500', bgColor: 'bg-gray-100' };
   };
 
-  // Format time ago
   const getTimeAgo = (timestamp) => {
     const now = new Date();
     const time = new Date(timestamp);
     const diffInSeconds = Math.floor((now - time) / 1000);
-    
+
     if (diffInSeconds < 60) return 'Just now';
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
     return `${Math.floor(diffInSeconds / 86400)}d ago`;
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
-  // ✅ FIXED: Only fetch if authenticated
   useEffect(() => {
     if (isAdminAuthenticated()) {
       fetchNotifications();
-      
-      // Poll for new notifications every 30 seconds
       const interval = setInterval(fetchUnreadCount, 30000);
       return () => clearInterval(interval);
     }
   }, []);
 
-  // Show disabled bell if not authenticated
   if (authError || !isAdminAuthenticated()) {
     return (
       <div className="relative" ref={dropdownRef}>
@@ -408,9 +385,9 @@ export default function AdminNotificationBell() {
                   >
                     <Link
                       to={getNotificationLink(notification)}
-                      onClick={(e) => {  // ✅ Get the actual event object
+                      onClick={(e) => {
                         if (!notification.isRead) {
-                          markAsRead(notification._id, e);  // ✅ Pass the real event
+                          markAsRead(notification._id, e);
                         }
                         setIsOpen(false);
                       }}

@@ -5,6 +5,8 @@ import { MdAdminPanelSettings, MdAssignment } from 'react-icons/md';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function DashboardHome() {
   const [approvalCounts, setApprovalCounts] = useState({
     total: 0,
@@ -17,11 +19,9 @@ export default function DashboardHome() {
     users: { total: 0, active: 0, pending: 0 },
   });
 
-  // showModal (boolean) + modalType ('generated' | 'attempts')
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("generated");
 
-  // ✅ ADD THIS: Function to get token
   const getToken = () => {
     return localStorage.getItem('token');
   };
@@ -29,21 +29,20 @@ export default function DashboardHome() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const token = getToken(); // ✅ GET TOKEN
-        const response = await fetch("/api/admin/dashboard/stats", {
+        const token = getToken();
+        const response = await fetch(`${API_URL}/api/admin/dashboard/stats`, {
           headers: {
-            'Authorization': `Bearer ${token}`, // ✅ ADD AUTHORIZATION HEADER
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
-        
+
         if (response.status === 401) {
-          // Handle unauthorized
           localStorage.removeItem('token');
           window.location.href = '/admin-login';
           return;
         }
-        
+
         const data = await response.json();
         console.log("📊 API /dashboard/stats Response:", data);
         setStats(data);
@@ -54,21 +53,20 @@ export default function DashboardHome() {
 
     const fetchApprovalCounts = async () => {
       try {
-        const token = getToken(); // ✅ GET TOKEN
-        const response = await fetch("/api/admin/approvals/counts", {
+        const token = getToken();
+        const response = await fetch(`${API_URL}/api/admin/approvals/counts`, {
           headers: {
-            'Authorization': `Bearer ${token}`, // ✅ ADD AUTHORIZATION HEADER
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
-        
+
         if (response.status === 401) {
-          // Handle unauthorized
           localStorage.removeItem('token');
           window.location.href = '/admin-login';
           return;
         }
-        
+
         const data = await response.json();
         setApprovalCounts(data);
       } catch (error) {
@@ -80,7 +78,6 @@ export default function DashboardHome() {
     fetchApprovalCounts();
   }, []);
 
-  // helper to open modal for specific context
   const openModal = (type = "generated") => {
     setModalType(type);
     setShowModal(true);
@@ -90,7 +87,7 @@ export default function DashboardHome() {
     <>
       {/* Stats Cards */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
+
         {/* Generated Assessments Card */}
         <div
           className="bg-gradient-to-r from-purple-400 to-indigo-500 rounded-xl p-6 text-white shadow-lg transform hover:scale-105 transition-transform cursor-pointer"
@@ -99,7 +96,6 @@ export default function DashboardHome() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-bold">Generated Assessments</h3>
-              {/* <p className="text-2xl">{stats?.teachers?.assessmentsGenerated ?? 0}</p> */}
             </div>
             <MdAdminPanelSettings className="text-4xl opacity-75" />
           </div>
@@ -119,7 +115,6 @@ export default function DashboardHome() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-bold">Student Attempts</h3>
-              {/* <p className="text-2xl">{stats?.users?.attempts ?? 0}</p> */}
               <p className="text-sm mt-2">Total attempts across all students</p>
             </div>
             <FaUsers className="text-4xl opacity-75" />
@@ -147,8 +142,8 @@ export default function DashboardHome() {
               <p>Assessments: 250</p>
               <p>Avg. Score: 78%</p>
             </div>
-            <Link 
-              to="/admin/analytics" 
+            <Link
+              to="/admin/analytics"
               className="bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full"
             >
               View
@@ -171,8 +166,8 @@ export default function DashboardHome() {
               <p>Teachers: {approvalCounts?.teachers ?? 0}</p>
               <p>Students: {approvalCounts?.students ?? 0}</p>
             </div>
-            <Link 
-              to="/admin-dashboard/approvals" 
+            <Link
+              to="/admin-dashboard/approvals"
               className="bg-white/20 hover:bg-white/30 px-3 py-3 rounded-full"
             >
               Review
@@ -185,6 +180,7 @@ export default function DashboardHome() {
       <section className="mt-8">
         <h2 className="text-2xl font-bold mb-4">Key Performance Indicators (KPIs) & Recent Activities</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
           {/* Student Engagement Card */}
           <div className="bg-white rounded-xl p-6 shadow-lg">
             <h3 className="text-lg text-blue-700 font-bold mb-4">Student Engagement</h3>
@@ -255,10 +251,11 @@ export default function DashboardHome() {
         </div>
       </section>
 
-      {/* 👇 Modal (shared for both Generated Assessments and Student Attempts) */}
+      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 p-4">
           <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+
             {/* Modal Header */}
             <div
               className={
@@ -271,7 +268,7 @@ export default function DashboardHome() {
                 <h2 className="text-2xl font-bold">
                   {modalType === "generated" ? "Assessment Types" : "Student Attempts"}
                 </h2>
-                <button 
+                <button
                   onClick={() => setShowModal(false)}
                   className="text-white hover:bg-white/20 p-1 rounded-full transition-colors"
                 >
@@ -284,13 +281,12 @@ export default function DashboardHome() {
                   : "Select which attempted assessments you want to view"}
               </p>
             </div>
-            
+
             {/* Modal Body */}
             <div className="p-6">
               <div className="grid grid-cols-1 gap-4">
                 {modalType === "generated" ? (
                   <>
-                    {/* SAT Generated */}
                     <Link
                       to="/admin-dashboard/sat-generated-assessments"
                       className="flex items-center p-4 border border-gray-200 rounded-xl hover:border-indigo-400 hover:shadow-md transition-all group"
@@ -310,7 +306,6 @@ export default function DashboardHome() {
                       </div>
                     </Link>
 
-                    {/* Standard Generated */}
                     <Link
                       to="/admin-dashboard/standard-generated-assessments"
                       className="flex items-center p-4 border border-gray-200 rounded-xl hover:border-purple-400 hover:shadow-md transition-all group"
@@ -332,7 +327,6 @@ export default function DashboardHome() {
                   </>
                 ) : (
                   <>
-                    {/* SAT Attempted */}
                     <Link
                       to="/admin-dashboard/attempts/sat"
                       className="flex items-center p-4 border border-gray-200 rounded-xl hover:border-rose-400 hover:shadow-md transition-all group"
@@ -352,7 +346,6 @@ export default function DashboardHome() {
                       </div>
                     </Link>
 
-                    {/* Standard Attempted */}
                     <Link
                       to="/admin-dashboard/attempts/standard"
                       className="flex items-center p-4 border border-gray-200 rounded-xl hover:border-pink-400 hover:shadow-md transition-all group"
@@ -375,7 +368,7 @@ export default function DashboardHome() {
                 )}
               </div>
             </div>
-            
+
             {/* Modal Footer */}
             <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
               <button
