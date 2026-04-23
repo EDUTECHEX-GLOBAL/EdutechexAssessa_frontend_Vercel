@@ -6,6 +6,8 @@ import { BiArrowBack, BiDownload, BiTrash } from "react-icons/bi";
 import { FiFileText, FiAward } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const AssessmentLibrary = ({ onBack }) => {
   const [activeTab, setActiveTab] = useState("standard");
   const [standardAssessments, setStandardAssessments] = useState([]);
@@ -27,16 +29,16 @@ const AssessmentLibrary = ({ onBack }) => {
       setLoading(true);
       try {
         const [standardRes, satRes] = await Promise.all([
-          axios.get("/api/assessments/my", {
+          axios.get(`${API_URL}/api/assessments/my`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get("/api/sat-assessments/library", {
+          axios.get(`${API_URL}/api/sat-assessments/library`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
 
-        setStandardAssessments(standardRes.data);
-        setSatAssessments(satRes.data);
+        setStandardAssessments(Array.isArray(standardRes.data) ? standardRes.data : standardRes.data.data || []);
+        setSatAssessments(Array.isArray(satRes.data) ? satRes.data : satRes.data.data || []);
       } catch (error) {
         console.error("Error fetching assessments", error);
         toast.error("Failed to load assessments");
@@ -60,8 +62,8 @@ const AssessmentLibrary = ({ onBack }) => {
 
     try {
       const url = isSAT
-        ? `/api/sat-assessments/${assessmentId}`
-        : `/api/assessments/${assessmentId}`;
+        ? `${API_URL}/api/sat-assessments/${assessmentId}`
+        : `${API_URL}/api/assessments/${assessmentId}`;
 
       await axios.delete(url, {
         headers: { Authorization: `Bearer ${token}` },
