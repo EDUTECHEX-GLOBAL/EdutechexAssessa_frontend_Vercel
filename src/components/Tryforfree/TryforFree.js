@@ -1,11 +1,8 @@
 // D:\EdutechexAssessa\frontend\src\components\TryforFree.js
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import Assessalogo from "../../assets/assessaai_logo2.png";
 
 const TryforFree = () => {
-  const navigate = useNavigate();
-
   const handleOptionClick = (path) => {
     const absolutePath = `${window.location.origin}${path}`;
     window.open(absolutePath, "_blank");

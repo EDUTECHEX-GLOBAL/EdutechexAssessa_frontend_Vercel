@@ -12,8 +12,6 @@ const buttonImages = {
   green: GreenButton,
 };
 
-const imageSources = ["../assets/Feature3Img.png", "../assets/Feature4Img.png"];
-
 const Features = () => {
   const { assessaData } = useSelector((state) => state.root);
 
@@ -24,9 +22,8 @@ const Features = () => {
   const featuresData = assessaData.features.map((feature, index) => {
     const buttonColor = index === 0 ? "text-blue-600" : index === 1 ? "text-pink-600" : "text-green-600";
     const buttonImg = index === 0 ? buttonImages.blue : index === 1 ? buttonImages.pink : buttonImages.green;
-    const imgSrc = index < imageSources.length ? imageSources[index] : Aerospace;
 
-    return { ...feature, buttonColor, buttonImg, imgSrc };
+    return { ...feature, buttonColor, buttonImg };
   });
 
   return (
