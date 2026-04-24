@@ -7,7 +7,7 @@ import GradientBackground from "../assets/gradient edit3.jpg";
 import HeroImage from "../assets/assessa_bannerimagewebp.webp";
 import RedArrow from "../assets/blue-button.svg";
 import Assessalogo from "../assets/assessaai_logo2.png"; // Import the logo
-import TryforFree from "../WebApp/TryforFree"; // Import the TryforFree component
+import TryforFree from "./Tryforfree/TryforFree"; // Import the TryforFree component
 import "./Discover.css";
 
 const Discover = () => {

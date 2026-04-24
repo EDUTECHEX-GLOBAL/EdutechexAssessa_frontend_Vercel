@@ -13,7 +13,6 @@ const Faq = lazy(() => import("../../components/Faq"));
 const Contact = lazy(() => import("../../components/Contact"));
 const Footer = lazy(() => import("../../components/Footer"));
 
-// ✅ Organization JSON-LD for rich results
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -35,12 +34,11 @@ const jsonLd = {
 };
 
 function Home() {
-  const { assessaData } = useSelector((state) => state.root);
+  const { assessaData, loading } = useSelector((state) => state.root);
   const memoizedData = useMemo(() => assessaData, [assessaData]);
 
   return (
     <div className="font-inter">
-      {/* ✅ Added Helmet for homepage SEO */}
       <Helmet>
         <title>Assessa AI | Your AI-Driven Educational Companion</title>
         <meta
@@ -54,26 +52,38 @@ function Home() {
       </Helmet>
 
       <Navbar />
+
       <div className="pt-20">
-        {/* ✅ Always render components — don't gate on API data */}
-        <Suspense
-          fallback={
-            <div className="px-[20px] lg:px-20 mx-auto">
-              <Skeleton active />
-            </div>
-          }
-        >
-          <Discover />
-          <div className="px-[20px] lg:px-20 mx-auto">
-            <Vision className="mt-16" />
-            <Features className="mt-16" />
-            <Team className="mt-16" />
-            <Pricing className="mt-16" />
-            <Faq className="mt-16" />
-            <Contact className="mt-16" />
-            <Footer className="mt-16" />
+        {/* ✅ Show skeleton while backend wakes up or data is loading */}
+        {loading || !assessaData ? (
+          <div className="px-[20px] lg:px-20 mx-auto space-y-10 py-10">
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
           </div>
-        </Suspense>
+        ) : (
+          <Suspense
+            fallback={
+              <div className="px-[20px] lg:px-20 mx-auto space-y-10 py-10">
+                <Skeleton active />
+                <Skeleton active />
+                <Skeleton active />
+              </div>
+            }
+          >
+            <Discover />
+            <div className="px-[20px] lg:px-20 mx-auto">
+              <Vision className="mt-16" />
+              <Features className="mt-16" />
+              <Team className="mt-16" />
+              <Pricing className="mt-16" />
+              <Faq className="mt-16" />
+              <Contact className="mt-16" />
+              <Footer className="mt-16" />
+            </div>
+          </Suspense>
+        )}
       </div>
     </div>
   );

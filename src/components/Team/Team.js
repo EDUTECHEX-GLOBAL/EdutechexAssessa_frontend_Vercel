@@ -56,7 +56,7 @@ const PrevArrow = (props) => {
   );
 };
 
-const Team = ({className}) => {
+const Team = ({ className }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
   const { assessaData } = useSelector((state) => state.root);
@@ -77,9 +77,9 @@ const Team = ({className}) => {
     speed: 800,
     slidesToShow: 3,
     slidesToScroll: 1,
-    autoplay: true, // Enable auto sliding
-    autoplaySpeed: 2000, // Slide every 3 seconds
-    initialSlide: 0, // Ensures animation starts immediately from the first slide
+    autoplay: true,
+    autoplaySpeed: 2000,
+    initialSlide: 0,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [
@@ -100,20 +100,18 @@ const Team = ({className}) => {
     ],
   };
 
-  if (
-    !assessaData ||
-    !assessaData.team ||
-    assessaData.team.length === 0
-  ) {
-    return (
-      <div className="bg-gradient-to-r from-purple-500 to-blue-500 py-12 px-4 rounded-lg">
-        <p className="text-white text-center">No team members found.</p>
-      </div>
-    );
+  // ✅ Return null instead of showing error message — Home.js handles loading state
+  if (!assessaData || !assessaData.team || assessaData.team.length === 0) {
+    return null;
   }
 
   const { teamheading, teamsubheading } = assessaData.team[0];
   const teammembers = assessaData.teammember;
+
+  // ✅ Guard against empty team members array
+  if (!teammembers || teammembers.length === 0) {
+    return null;
+  }
 
   return (
     <div

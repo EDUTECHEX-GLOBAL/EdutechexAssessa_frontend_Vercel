@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Loading from "../../WebApp/Warnings/Loading/Loading";
+import Loading from '../Warnings/Loading/Loading';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import adminImage from "./adminpanel_loginwebp.webp";

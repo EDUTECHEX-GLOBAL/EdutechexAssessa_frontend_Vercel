@@ -2,7 +2,6 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import Check from "../assets/check.svg";
-import Aerospace from "../assets/aerospace.jpg";
 import BlueButton from "../assets/blue-button.svg";
 import PinkButton from "../assets/pink-button.svg";
 import GreenButton from "../assets/green-button.svg";

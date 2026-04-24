@@ -6,7 +6,7 @@ function Pricing() {
   const { assessaData } = useSelector((state) => state.root);
 
   if (!assessaData) {
-    return <div>Loading...</div>; // Add loading state if assessaData is null
+    return null;
   }
 
   const { pricing, pricingcard } = assessaData;
@@ -17,7 +17,7 @@ function Pricing() {
     !pricingcard ||
     pricingcard.length === 0
   ) {
-    return <div>No pricing data available.</div>;
+    return null;
   }
 
   const { priceheading } = pricing[0];
@@ -45,7 +45,7 @@ function Pricing() {
 
   const getColorClass = (index) => {
     const colors = Object.values(colorClasses);
-    const colorIndex = index % colors.length; // Calculate color index based on card index
+    const colorIndex = index % colors.length;
     return colors[colorIndex];
   };
 
@@ -56,13 +56,13 @@ function Pricing() {
       </h1>
       <div className="flex flex-col gap-6 lg:flex-row">
         {pricingcard.map((card, index) => {
-          const colorClass = getColorClass(index); // Pass index to getColorClass
+          const colorClass = getColorClass(index);
 
           return (
             <div
               key={index}
               className={`w-full ${colorClass.bg} p-6 flex flex-col justify-between shadow-lg rounded-lg`}
-              style={{ marginTop: "20px" }} // Added margin top here
+              style={{ marginTop: "20px" }}
             >
               <div>
                 <h3
