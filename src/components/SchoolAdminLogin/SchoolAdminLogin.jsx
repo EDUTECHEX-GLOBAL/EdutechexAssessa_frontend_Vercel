@@ -11,7 +11,7 @@ const SchoolAdminLogin = () => {
       {/* Left Side - Image (Hidden on Mobile) */}
       <div className="w-1/2 sm:flex hidden items-center justify-center">
         <img 
-          src={require("./schooladmin.jpeg")} 
+          src={require("./schooladminwebp.webp")} 
           alt="School Admin Login" 
           className="w-full h-full object-cover" 
         />

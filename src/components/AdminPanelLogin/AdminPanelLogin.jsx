@@ -6,7 +6,7 @@ import axios from "axios";
 import Loading from "../../WebApp/Warnings/Loading/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import adminImage from "./adminpanel-login.jpeg";
+import adminImage from "./adminpanel_loginwebp.webp";
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Email is required"),

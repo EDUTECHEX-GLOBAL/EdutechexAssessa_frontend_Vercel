@@ -11,7 +11,7 @@ const TeacherLogin = () => {
       {/* Left Side - Image (Hidden on Mobile) */}
       <div className="w-1/2 sm:flex hidden items-center justify-center">
         <img 
-          src={require("./teacher.jpeg")} 
+          src={require("./teacherloginwebp.webp")} 
           alt="Teacher Login" 
           className="w-full h-full object-cover" 
         />

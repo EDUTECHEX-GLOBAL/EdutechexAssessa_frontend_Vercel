@@ -4,7 +4,7 @@ import { Modal } from "antd";
 import Draggable from "react-draggable";
 import { useSelector } from "react-redux";
 import GradientBackground from "../assets/gradient edit3.jpg";
-import HeroImage from "../assets/assessa_banner1.png";
+import HeroImage from "../assets/assessa_bannerimagewebp.webp";
 import RedArrow from "../assets/blue-button.svg";
 import Assessalogo from "../assets/assessaai_logo2.png"; // Import the logo
 import TryforFree from "../WebApp/TryforFree"; // Import the TryforFree component
