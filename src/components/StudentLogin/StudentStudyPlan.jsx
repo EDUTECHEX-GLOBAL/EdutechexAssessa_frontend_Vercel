@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import SmartLearningModal from "./SmartLearningModal";
 import { motion } from "framer-motion";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 // Enhanced color palette with gradients
 const colors = {
   primary: "#6366F1",
@@ -48,7 +50,7 @@ export default function StudentStudyPlan({ onBackHome }) {
 
       const targetStudentId = studentId || userInfo._id;
       
-      const response = await fetch(`/api/study-plan/${targetStudentId}`, {
+      const response = await fetch(`${API_URL}/api/study-plan/${targetStudentId}`, {
         headers: {
           Authorization: `Bearer ${userInfo.token}`,
           'Content-Type': 'application/json'
