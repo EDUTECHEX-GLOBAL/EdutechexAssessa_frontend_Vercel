@@ -17,8 +17,9 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "EdutechEx AssessA",
+  "alternateName": ["AssessA AI", "Assessa AI", "EdutechEx Assessa"],
   "url": "https://edutechexassessa.com",
-  "description": "AssessA AI is your AI-driven educational companion — intelligent assessments, study tools, and learning solutions.",
+  "description": "EdutechEx AssessA — AssessA AI is your AI-driven educational companion — intelligent assessments, study tools, and learning solutions.",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Hyderabad",
@@ -34,16 +35,20 @@ const jsonLd = {
 };
 
 function Home() {
-  const { assessaData, loading } = useSelector((state) => state.root);
+  const { assessaData } = useSelector((state) => state.root);
   const memoizedData = useMemo(() => assessaData, [assessaData]);
 
   return (
     <div className="font-inter">
       <Helmet>
-        <title>Assessa AI | Your AI-Driven Educational Companion</title>
+        <title>EdutechEx AssessA | Your AI-Driven Educational Companion</title>
         <meta
           name="description"
-          content="AssessA AI is your AI-driven educational companion — intelligent assessments, study tools, and learning solutions for students and institutions."
+          content="EdutechEx AssessA — AssessA AI is your AI-driven educational companion — intelligent assessments, study tools, and learning solutions for students and institutions."
+        />
+        <meta
+          name="keywords"
+          content="EdutechEx Assessa, AssessA AI, AI assessments, educational AI, EdutechEx, AI-driven education"
         />
         <link rel="canonical" href="https://edutechexassessa.com/" />
         <script type="application/ld+json">
@@ -54,36 +59,27 @@ function Home() {
       <Navbar />
 
       <div className="pt-20">
-        {/* ✅ Show skeleton while backend wakes up or data is loading */}
-        {loading || !assessaData ? (
-          <div className="px-[20px] lg:px-20 mx-auto space-y-10 py-10">
-            <Skeleton active />
-            <Skeleton active />
-            <Skeleton active />
-            <Skeleton active />
-          </div>
-        ) : (
-          <Suspense
-            fallback={
-              <div className="px-[20px] lg:px-20 mx-auto space-y-10 py-10">
-                <Skeleton active />
-                <Skeleton active />
-                <Skeleton active />
-              </div>
-            }
-          >
-            <Discover />
-            <div className="px-[20px] lg:px-20 mx-auto">
-              <Vision className="mt-16" />
-              <Features className="mt-16" />
-              <Team className="mt-16" />
-              <Pricing className="mt-16" />
-              <Faq className="mt-16" />
-              <Contact className="mt-16" />
-              <Footer className="mt-16" />
+        {/* ✅ Always render — don't gate on API data for Googlebot */}
+        <Suspense
+          fallback={
+            <div className="px-[20px] lg:px-20 mx-auto space-y-10 py-10">
+              <Skeleton active />
+              <Skeleton active />
+              <Skeleton active />
             </div>
-          </Suspense>
-        )}
+          }
+        >
+          <Discover />
+          <div className="px-[20px] lg:px-20 mx-auto">
+            <Vision className="mt-16" />
+            <Features className="mt-16" />
+            <Team className="mt-16" />
+            <Pricing className="mt-16" />
+            <Faq className="mt-16" />
+            <Contact className="mt-16" />
+            <Footer className="mt-16" />
+          </div>
+        </Suspense>
       </div>
     </div>
   );
